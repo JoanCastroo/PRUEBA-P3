@@ -23,3 +23,35 @@ void corregirArchivo(const char* nombreArchivoEntrada, const char* nombreArchivo
     int contadorCorrecciones = 0;
     struct Correccion correcciones[MAX_LENGTH];
     int indiceCorrecciones = 0;
+
+    while (fgets(linea, sizeof(linea), archivoEntrada) != NULL) {
+        char* palabra = strtok(linea, " \t\n");
+
+        while (palabra != NULL) {
+            if (strcmp(palabra, "Ecuador") == 0) {
+                palabra[0] = toupper(palabra[0]);
+                contadorCorrecciones++;
+
+                int encontrado = 0;
+                for (int i = 0; i < indiceCorrecciones; i++) {
+                    if (strcmp(correcciones[i].palabra, palabra) == 0) {
+                        correcciones[i].contador++;
+                        encontrado = 1;
+                        break;
+                    }
+                }
+
+                if (!encontrado) {
+                    strcpy(correcciones[indiceCorrecciones].palabra, palabra);
+                    correcciones[indiceCorrecciones].contador = 1;
+                    indiceCorrecciones++;
+                }
+            }
+
+            fputs(palabra, archivoSalida);
+            fputc(' ', archivoSalida);
+
+            palabra = strtok(NULL, " \t\n");
+        }
+    }
+    
