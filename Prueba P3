@@ -3,9 +3,23 @@
 #include <string.h>
 #include <ctype.h>
 
-#define MAX_LENGTH 1000
+
 
 struct Correccion {
     char palabra[MAX_LENGTH];
     int contador;
 };
+
+void corregirArchivo(const char* nombreArchivoEntrada, const char* nombreArchivoSalida) {
+    FILE* archivoEntrada = fopen(nombreArchivoEntrada, "r");
+    FILE* archivoSalida = fopen(nombreArchivoSalida, "w");
+
+    if (archivoEntrada == NULL || archivoSalida == NULL) {
+        printf("Error al abrir los archivos.\n");
+        return;
+    }
+
+    char linea[MAX_LENGTH];
+    int contadorCorrecciones = 0;
+    struct Correccion correcciones[MAX_LENGTH];
+    int indiceCorrecciones = 0;
