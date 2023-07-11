@@ -3,12 +3,24 @@
 #include <string.h>
 #include <ctype.h>
 
-
+#define MAX_LENGTH 1000
 
 struct Correccion {
     char palabra[MAX_LENGTH];
     int contador;
 };
+
+int contarCorrecciones(const char* palabra) {
+    if (strcmp(palabra, "ecuador") == 0) {
+        char nuevaPalabra[MAX_LENGTH];
+        nuevaPalabra[0] = toupper(palabra[0]);
+        strcpy(nuevaPalabra + 1, palabra + 1);
+        strcpy(palabra, nuevaPalabra);
+        return 1;
+    }
+
+    return 0;
+}
 
 void corregirArchivo(const char* nombreArchivoEntrada, const char* nombreArchivoSalida) {
     FILE* archivoEntrada = fopen(nombreArchivoEntrada, "r");
@@ -28,25 +40,7 @@ void corregirArchivo(const char* nombreArchivoEntrada, const char* nombreArchivo
         char* palabra = strtok(linea, " \t\n");
 
         while (palabra != NULL) {
-            if (strcmp(palabra, "Ecuador") == 0) {
-                palabra[0] = toupper(palabra[0]);
-                contadorCorrecciones++;
-
-                int encontrado = 0;
-                for (int i = 0; i < indiceCorrecciones; i++) {
-                    if (strcmp(correcciones[i].palabra, palabra) == 0) {
-                        correcciones[i].contador++;
-                        encontrado = 1;
-                        break;
-                    }
-                }
-
-                if (!encontrado) {
-                    strcpy(correcciones[indiceCorrecciones].palabra, palabra);
-                    correcciones[indiceCorrecciones].contador = 1;
-                    indiceCorrecciones++;
-                }
-            }
+            contadorCorrecciones += contarCorrecciones(palabra);
 
             fputs(palabra, archivoSalida);
             fputc(' ', archivoSalida);
@@ -54,4 +48,19 @@ void corregirArchivo(const char* nombreArchivoEntrada, const char* nombreArchivo
             palabra = strtok(NULL, " \t\n");
         }
     }
-    
+
+    fclose(archivoEntrada);
+    fclose(archivoSalida);
+
+    printf("Se corrigieron un total de %d palabras.\n", contadorCorrecciones);
+}
+
+int main() {
+    const char* archivoEntrada = "archivo_entrada.txt";
+    const char* archivoSalida = "archivo_salida.txt";
+
+    corregirArchivo(archivoEntrada, archivoSalida);
+
+    return 0;
+}
+
