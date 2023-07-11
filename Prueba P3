@@ -1,0 +1,11 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+
+#define MAX_LENGTH 1000
+
+struct Correccion {
+    char palabra[MAX_LENGTH];
+    int contador;
+};
